@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>FORM TO JSON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <form name="forms" id="forms">
+        <label>What's your name?
+            <input name="username" type="text" />
+        </label>
+        <label>How many years have you been a developer?
+            <input name="age" type="number" />
+        </label>
+        <label>Upload images
+            <input name="images" type="file" accept="image/png, image/jpg" multiple/> 
+        </label>
+        <label>Do you know JavaScript?
+            <input name="languages" type="checkbox" value="javascript" />JavaScript
+        </label>
+        <label>Do you know Python?
+            <input name="languages" type="checkbox" value="python" />Python
+        </label>
+        <label>Enjoyed this blog?
+            <input name="isHappyReader" type="checkbox" />Yes 
+        </label>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        const formElement = document.querySelector('form#forms');
+
+        const getFormJSON = (form) => {
+            const data = new FormData(form);
+            return Array.from(data.keys()).reduce((result, key) => {
+                if(result[key]){
+                    result[key] = data.getAll(key);
+                    return result;
+                }
+                result[key] = data.get(key);
+                return result;
+            }, {});
+        };
+
+        const handler = (event) => {
+            event.preventDefault();
+            const valid = formElement.reportValidity();
+            if(valid){
+                const result = getFormJSON(formElement);
+                const images = [result.images].flat().filter((file) => !!file.name);
+                const languages = [result.languages || []].flat();
+                const isHappyReader = !!(result.isHappyReader && result.isHappyReader === 'on');
+            
+                const output = {
+                    ...result,
+                    images,
+                    languages,
+                    isHappyReader
+                };
+                alert('Form submitted successfully! Check console for JSON data.');
+                console.log(output);
+            }
+        };
+        formElement.addEventListener("submit", handler);
+    </script>
+</body>
+
+</html>
