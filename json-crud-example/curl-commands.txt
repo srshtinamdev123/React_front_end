@@ -1,0 +1,9 @@
+POST ===> curl -X POST -H "Content-Type: application/json" -d '{"id":5, "name":"David", "email":"david@gmail.com", "phone": "9876543214"}' http://localhost:3000/users
+
+GET ===> curl http://localhost:3000/users/2
+
+PUT ===> curl -X PUT -H "Content-Type:application/json" -d '{"name":"David", "email":"david@outlook.com", "phone":"9876543215"}' http://localhost:3000/users/5
+
+PATCH ===> curl -X PATCH -H "Content-Type:application/json" -d '{ "email":"david@yahoo.com"}' http://localhost:3000/users/5
+
+DELETE ===> curl -X DELETE http://localhost:3000/users/5
