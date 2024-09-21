@@ -1,9 +1,37 @@
-import React from 'react';
+import logo from './logo.svg';
+import './App.css';
+import HelloWorld from './components/helloworld';
+import Greeting from './components/greeting';
+import StyleComponent from './components/stylecomponent';
+import ActionButton from './components/actionbutton';
+import NumberList from './components/numberlist';
+import Counter from './components/counter';
+import Toggle from './components/toggle';
+import Form from './components/form';
+import UserInfo from './components/userinfo';
+import ArrayState from './components/arraysstate';
 
-class FirstApp extends React.Component{
-  render(){
-    return <h2> This is my first assignment</h2>
-  }
+function App() {
+  return (
+    <div className="App">
+      {/* <HelloWorld/>
+      <Greeting/>
+      <StyleComponent/>
+      <ActionButton/>
+      <NumberList/>
+      <Counter/>
+      <Toggle/> 
+       <Form/>
+       <UserInfo/>*/}
+
+       <ArrayState/>
+
+       
+
+     
+
+    </div>
+  );
 }
 
-export default FirstApp;
+export default App;
