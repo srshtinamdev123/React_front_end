@@ -1,0 +1,581 @@
+Routing in React :
+
+-> Routing
+-> Basic Routing
+-> Linking
+-> Programmatic
+-> Nested Routes
+-> Login - Protected Routes
+
+
+----> Routing -> mechanism allows us to define navigation within react application
+              -> move can move between pages
+              -> SPA
+
+-> react-router-dom -> library for routing in react apps
+
+-> routing importance 
+   -> navigation
+   -> modularity
+   -> better user experience
+
+-> How routing works in react >
+   -> react router - allows diff components to be displayed based on current url
+   -> react apps do not refresh page - view is updated dynamically
+
+   -> routing components
+      <Routes>
+      <Route -> maps to some view/component - path ="/" , element
+   -> Link -> 
+
+-----------------------------------------------------------------------------
+
+Commands : npx create-react-app my-web-app
+           cd my-web-app
+           npm install react-router-dom
+
+Web App -> Home, About, Contact -> .js
+        -> 
+
+BrowserRouter -> enables routing, keeps tracks of browsers url , which component to render
+
+Routes -> It contains all routes definition
+
+Route -> defining a specific path - /, /about
+
+Link -> create navigation links
+
+Home.js
+
+-> import React from 'react';
+
+const Home = () => {
+
+return(
+
+    <div>
+        <h2> Home Page </h2>
+        <p> Welcome to Home Page </p>
+    </div>
+);
+
+};
+
+export default Home;
+
+----------------------------------------
+
+About.js
+
+import React from 'react';
+
+const About = () => {
+
+return(
+
+    <div>
+        <h2> About Page </h2>
+        <p> Welcome to About Page </p>
+    </div>
+);
+
+};
+
+export default About;
+
+---------------------------------------------------
+
+Contact.js
+
+import React from 'react';
+
+const Contact = () => {
+
+return(
+
+    <div>
+        <h2> Contact Page </h2>
+        <p> Welcome to Contact Page </p>
+    </div>
+);
+
+};
+
+export default Contact;
+
+------------------------------------------------------
+
+App.js
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from './components/Home';
+import About from './components/About';
+import Contact from './components/Contact';
+
+function App() {
+  return (
+    <Router>
+    <div>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Define the Routes */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+    </div>
+    </Router>
+  );
+}
+
+export default App;
+----------------------------------------------------------------------
+npm start
+
+---------------------------------------------------------------------
+
+Nested Routing -> allows you to define routes inside another routes
+               -> hierarchy of components
+               -> render sub route component
+
+About (parent) -> sub pages -> 1. AboutOurTeam
+                               2. AboutOurHistory
+
+AboutOurTeam.js
+
+import React from 'react';
+
+const AboutOurTeam = () => {
+
+return(
+
+    <div>
+        <h2> Our Team </h2>
+        <p> Details about our Team </p>
+    </div>
+);
+
+};
+
+export default AboutOurTeam;
+
+-----------------------------------------------------
+
+AboutOurHistory.js
+
+import React from 'react';
+
+const AboutOurHistory = () => {
+
+return(
+
+    <div>
+        <h2> Our History </h2>
+        <p> Details about our History </p>
+    </div>
+);
+
+};
+
+export default AboutOurHistory;
+
+--------------------------------------------------------
+
+
+Nested - modify About.js - include links for these nested routes
+
+
+Outlet -> serves as a placeholder where the nested route components will be rendered...
+       -> render these two inside the parent component - About
+
+Modify About.js
+
+import React from 'react';
+import { Link, Outlet } from 'react-router-dom';
+
+const About = () => {
+return(
+    <div>
+        <h2> About Page </h2>
+        <p> Welcome to About Page </p>
+        {/* Add links for nested routes */}
+        <nav>
+            <ul>
+                <li>
+                    <Link to ="team">Our Team</Link>
+                </li>
+                <li>
+                    <Link to ="history">Our History</Link>
+                </li>
+            </ul>
+        </nav>
+        <Outlet />
+    </div>
+);
+
+};
+
+export default About;
+
+-----------------------------------------------------------------------
+Modify App.js 
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from './components/Home';
+import About from './components/About';
+import Contact from './components/Contact';
+import AboutOurHistory from './components/AboutOurHistory';
+import AboutOurTeam from './components/AboutOurTeam';
+
+function App() {
+  return (
+    <Router>
+    <div>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Define the Routes */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />}>
+            <Route path="team" element={<AboutOurTeam/>}/>
+            <Route path="history" element={<AboutOurHistory/>}/>
+        </Route>
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+
+    </div>
+    </Router>
+
+
+  );
+}
+
+export default App;
+------------------------------------------------------------------------
+
+implement routing parameters
+
+-> allow dynamic segments in URLs
+-> create routes displays info based on certain ID
+-> /about/team -> 2-3 members -> id : 1, id :2, id :3
+-> name degn dept
+-> /about/team/:id
+
+-> component -> team member details
+-> hook -> {useParams} -> allows to access the URL parameters, id-parameter
+-> id - 4 -> we 
+-> find team member by id
+
+AboutTeamMember.js 
+
+import React from 'react';
+import { useParams } from 'react-router-dom';
+
+const AboutTeamMember = () => {
+
+    //Extract the id from URL
+    const { id } = useParams();
+
+    // data of team members
+    const teamMembers = {
+        1 : {name: 'Dhruv',role: 'Software Engineer', dept : 'IT'},
+        2 : {name: 'Pooja',role: 'Project Manager', dept : 'IT'},
+        3 : {name: 'Sagar',role: 'Front End Desginer', dept : 'IT'},
+    };
+
+    // find the team member by id
+    const member = teamMembers[id]
+
+    if(!member){
+        return <p> No such Team Member found.</p>;
+    }
+
+    return (
+        <div>
+           <h2>{member.name}</h2>
+           <h3>Role : {member.role} </h3>
+           <h3>Dept : {member.dept} </h3>
+        </div>
+    );
+};
+
+export default AboutTeamMember;
+---------------------------------------------------------------------------
+AboutOurTeam.js
+
+import React from 'react';
+import {Link} from 'react-router-dom';
+
+const AboutOurTeam = () => {
+
+return(
+
+    <div>
+        <h2> Our Team </h2>
+        <p> Details about our Team </p>
+        <p> Meet our Team Members</p>
+        <ul>
+            <li>
+                <Link to="/about/team/1"> Team Member 1</Link>
+            </li>
+            <li>
+                <Link to="/about/team/2"> Team Member 3</Link>
+            </li>
+            <li>
+                <Link to="/about/team/3"> Team Member 3</Link>
+            </li>
+        </ul>
+    </div>
+);
+
+};
+
+export default AboutOurTeam;
+
+---------------------------------------------------------------
+
+Modify App.js
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from './components/Home';
+import About from './components/About';
+import Contact from './components/Contact';
+import AboutOurHistory from './components/AboutOurHistory';
+import AboutOurTeam from './components/AboutOurTeam';
+import AboutTeamMember from './components/AboutTeamMember';
+
+function App() {
+  return (
+    <Router>
+    <div>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Define the Routes */}
+      <Routes>
+        <Route path ="/" element={<Home />} />
+        <Route path="/about" element={<About />}>
+            <Route path="team" element={<AboutOurTeam/>}/>
+            <Route path="history" element={<AboutOurHistory/>}/>
+            {/* Route with parameter id */}
+            <Route path="team/:id" element={<AboutTeamMember/>} />
+        </Route>
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+
+    </div>
+    </Router>
+
+
+  );
+}
+
+export default App;
+
+-------------------------------------------------------------------------------
+
+Programmatic Navigation in React 
+
+-> react router
+-> redirect the user to different route from /about/team/1 -> 
+-> buttons , fills up form,
+
+-> hook -> useNavigate()  -> navigate function ->
+
+/about/team/1 ->  |Next Member|, |Back To list|
+
+-> Add buttons for navigation
+-> use of navigate
+
+AboutTeamMember.js
+
+import React from 'react';
+import { useParams , useNavigate} from 'react-router-dom';
+
+const AboutTeamMember = () => {
+
+    //Extract the id from URL
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    // data of team members
+    const teamMembers = {
+        1 : {name: 'Dhruv',role: 'Software Engineer', dept : 'IT'},
+        2 : {name: 'Pooja',role: 'Project Manager', dept : 'IT'},
+        3 : {name: 'Sagar',role: 'Front End Desginer', dept : 'IT'},
+    };
+
+    // find the team member by id
+    const member = teamMembers[id]
+
+    if(!member){
+        return <p> No such Team Member found.</p>;
+    }
+
+    // Function to navigate to another team member
+    // 1-2-3-1
+    const navigateNextTeamMember = () => {
+        const nextId = (parseInt(id) % 3) + 1; //cal next mem id
+        // 1 -> 1%3 = 1+1 = 2, 2 -> 2%3 = 2+1 =3, 3->1
+        navigate(`/about/team/${nextId}`);
+    }
+    
+    // Function to navigate back to team list
+    const navigateToTeamList = () => {
+        navigate('/about/team')
+    }
+    return (
+        <div>
+           <h2>{member.name}</h2>
+           <h3>Role : {member.role} </h3>
+           <h3>Dept : {member.dept} </h3>
+           {/* Button for Next Mem */}
+           <button onClick={navigateNextTeamMember}> Next Team Member </button>
+           {/* Button for Back To List */}
+           <button onClick={navigateToTeamList}> Back To Team </button>
+        </div>
+    );
+};
+
+export default AboutTeamMember;
+----------------------------------------------------------------------
+
+Protected Routes 
+
+-> restrict access to certain routes based on some conditions
+-> like user authentication
+-> if condition is met, users are redirected to a login page
+-> if condition is not met, users are redirected to some error page
+
+<Route path='/dashboard' element = { isAuthenticated ? <Dashboard/> : <Navigate to = "/login" />
+-> redirect to dashboard if authenticated otherwise login
+
+Home -> Go To Login -> Login (Button)
+
+Modify Home.js
+
+import React from 'react';
+import {Link} from 'react-router-dom';
+
+const Home = () => {
+
+return(
+
+    <div>
+        <h2> Home Page </h2>
+        <p> Welcome to Home Page </p>
+        <Link to="/login"> Go To Login Page</Link>
+    </div>
+);
+
+};
+
+export default Home;
+
+------------------------------------------------
+
+Create Login.js
+
+import React from 'react';
+import { useNavigate} from 'react-router-dom';
+
+const Login = ({login}) => {
+    const navigate = useNavigate();
+
+    const handleLogin = () => {
+        login(); //call the login function passed as a prop
+        navigate('/dashboard');
+    };
+
+    return (
+        <div>
+            <h2>Login Page</h2>
+            <button onClick={handleLogin}> Login </button>
+        </div>
+    );
+};
+
+export default Login;
+
+----------------------------------------------------
+
+Login -> Go to Dashboard
+Dashboard -> Logout Button -> Move back to Login page
+
+Create Dashboard.js
+import React from 'react';
+import { useNavigate} from 'react-router-dom';
+
+const Dashboard = ({logout}) => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout(); 
+        navigate('/login');
+    };
+
+    return (
+        <div>
+            <h2>Dashboard Page</h2>
+            <button onClick={handleLogout}> Logout </button>
+        </div>
+    );
+};
+
+export default Dashboard;
+
+-----------------------------------------------------
+Modify App.js
+
+logout()
+authentication -> ???
+routes - login, dashboard
+dashboard -> implement logic of protected route
+
+-------------------------------------------------
+
+
+
+
+
+
+           
